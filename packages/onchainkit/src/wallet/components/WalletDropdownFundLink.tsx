@@ -27,7 +27,7 @@ export type WalletDropdownFundLinkProps = {
   /** Where to open the target if `openIn` is set to tab */
   target?: string;
   /** Optional text override */
-  text?: string;
+  fundWalletText?: string;
   /** Optional funding URL override */
   fundingUrl?: string;
 };
@@ -40,10 +40,9 @@ export function WalletDropdownFundLink({
   popupSize = 'md',
   rel,
   target,
-  text,
+  fundWalletText,
 }: WalletDropdownFundLinkProps) {
-  const locale = useContext(WalletLocaleContext);
-  const label = useWalletText('walletDropdownFund', text);
+  const label = useWalletText('walletDropdownFund', fundWalletText);
   // If we can't get a funding URL, this component will be a no-op and render a disabled link
   const fundingUrlToRender =
     fundingUrl ??

@@ -10,15 +10,15 @@ export type WalletDropdownDisconnectProps = {
   /** Optional className override for the element */
   className?: string;
   /** Optional text override for the button */
-  text?: string;
+  disconnectText?: string;
 };
 
 export function WalletDropdownDisconnect({
   className,
-  text,
+  disconnectText,
 }: WalletDropdownDisconnectProps) {
   const { disconnect, connectors } = useDisconnect();
-  const label = useWalletText('walletDropdownDisconnect', text);
+  const label = useWalletText('walletDropdownDisconnect', disconnectText);
   const handleDisconnect = useCallback(() => {
     // Disconnect all the connectors (wallets). Usually only one is connected
     connectors.map((connector) => disconnect({ connector }));

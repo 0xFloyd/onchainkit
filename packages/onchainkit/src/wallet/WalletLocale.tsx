@@ -32,12 +32,12 @@ export const WalletLocaleContext =
  * WalletLocaleProvider allows developers to override wallet UI text.
  * Supply a `texts` prop with any keys from defaultWalletTexts to replace their values.
  */
-export function WalletLocaleProvider({
+export function WalletLocaleProvider<T extends WalletTextOverrides>({
   children,
-  texts = {},
+  texts = {} as T,
 }: {
   children: React.ReactNode;
-  texts?: WalletTextOverrides;
+  texts?: T;
 }) {
   useEffect(() => {
     if (process.env.NODE_ENV !== 'development') return;

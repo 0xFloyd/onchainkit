@@ -378,15 +378,16 @@ export function WalletModal({
               {termsOfServiceUrl && (
                 <a
                   href={termsOfServiceUrl}
+                  className={cn(text.accent, pressable.secondary)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn('text-ock-primary', 'hover:underline')}
-                  tabIndex={0}
                 >
                   {modalTerms}
                 </a>
-              )}{' '}
-              {termsOfServiceUrl && privacyPolicyUrl && ` ${modalAnd} `}{' '}
+              )}
+              {privacyPolicyUrl && termsOfServiceUrl && (
+                <span className="text-ock-foreground-muted">{modalAnd}</span>
+              )}
               {privacyPolicyUrl && (
                 <a
                   href={privacyPolicyUrl}

@@ -19,6 +19,10 @@ import type { AppConfig } from './core/types';
 import type { MiniKitOptions } from './minikit/types';
 import { MiniKitProvider } from '@/minikit/MiniKitProvider';
 import type { EASSchemaUid } from '@/identity/types';
+import {
+  WalletLocaleProvider,
+  type WalletTextOverrides,
+} from '@/wallet/WalletLocale';
 
 export type OnchainKitProviderReact = {
   analytics?: boolean;
@@ -31,6 +35,7 @@ export type OnchainKitProviderReact = {
   rpcUrl?: string;
   schemaId?: EASSchemaUid;
   miniKit?: MiniKitOptions;
+  texts?: WalletTextOverrides;
 };
 
 /**
@@ -48,6 +53,7 @@ export function OnchainKitProvider({
   miniKit = {
     enabled: false,
   },
+  texts,
 }: OnchainKitProviderReact) {
   if (schemaId && !checkHashLength(schemaId, 64)) {
     throw Error('EAS schemaId must be 64 characters prefixed with "0x"');
@@ -131,7 +137,9 @@ export function OnchainKitProvider({
           enabled={miniKit.enabled}
           notificationProxyUrl={miniKit.notificationProxyUrl}
         >
-          <OnchainKitProviderBoundary>{children}</OnchainKitProviderBoundary>
+          <WalletLocaleProvider texts={texts}>
+            <OnchainKitProviderBoundary>{children}</OnchainKitProviderBoundary>
+          </WalletLocaleProvider>
         </MiniKitProvider>
       </DefaultOnchainKitProviders>
     </OnchainKitContext.Provider>

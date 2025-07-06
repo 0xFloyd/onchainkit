@@ -56,7 +56,6 @@ export function WalletDropdown({
   swappableTokens,
 }: WalletDropdownProps) {
   const walletDropdownText = useWalletText('walletDropdownWallet');
-  const locale = useContext(WalletLocaleContext);
   const {
     breakpoint,
     isSubComponentOpen,

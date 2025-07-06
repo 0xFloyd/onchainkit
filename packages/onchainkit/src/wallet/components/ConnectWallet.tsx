@@ -29,7 +29,7 @@ export type ConnectWalletProps = WithRenderProps<{
   /** Optional callback function to execute when the wallet is connected. */
   onConnect?: () => void;
   /** Optional disconnected display override */
-  disconnectedLabel?: ReactNode;
+  disconnectedText?: ReactNode;
   /** Custom render function for complete control of button rendering */
   render?: ({
     label,
@@ -55,12 +55,11 @@ function ConnectWalletContent({
   ),
   className,
   onConnect,
-  disconnectedLabel,
+  disconnectedText,
   render,
 }: ConnectWalletProps) {
   const { config = { wallet: { display: undefined } } } = useOnchainKit();
   const walletContext = useWalletContext();
-  const locale = useContext(WalletLocaleContext);
   const {
     isConnectModalOpen,
     setIsConnectModalOpen,
@@ -84,7 +83,7 @@ function ConnectWalletContent({
   const connector = accountConnector || connectors[0];
   const isLoading = connectStatus === 'pending' || status === 'connecting';
 
-  const label = useWalletText('connectWalletButton', disconnectedLabel);
+  const label = useWalletText('connectWalletButton', disconnectedText);
 
   const handleToggle = useCallback(() => {
     if (isSubComponentOpen) {
