@@ -10,6 +10,7 @@ import { useWalletContext } from './WalletProvider';
 import type { Connector } from 'wagmi';
 import type { UseAccountReturnType, UseConnectReturnType, Config } from 'wagmi';
 import type { WalletContextType } from '../types';
+import { WalletLocaleProvider } from '../WalletLocale';
 
 const openConnectModalMock = vi.fn();
 
@@ -152,6 +153,42 @@ describe('ConnectWallet', () => {
     const button = screen.getByTestId('ockConnectButton');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Connect Wallet');
+  });
+
+  describe('Text Customization', () => {
+    it('renders with default English text', () => {
+      render(<ConnectWallet />);
+      expect(screen.getByText('Connect Wallet')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from prop', () => {
+      render(<ConnectWallet disconnectedLabel="Custom Connect" />);
+      expect(screen.getByText('Custom Connect')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from WalletLocaleProvider', () => {
+      const customTexts = {
+        connectWalletButton: 'Provider Connect',
+      };
+      render(
+        <WalletLocaleProvider texts={customTexts}>
+          <ConnectWallet />
+        </WalletLocaleProvider>,
+      );
+      expect(screen.getByText('Provider Connect')).toBeInTheDocument();
+    });
+
+    it('prioritizes prop text over provider text', () => {
+      const customTexts = {
+        connectWalletButton: 'Provider Connect',
+      };
+      render(
+        <WalletLocaleProvider texts={customTexts}>
+          <ConnectWallet disconnectedLabel="Prop Connect" />
+        </WalletLocaleProvider>,
+      );
+      expect(screen.getByText('Prop Connect')).toBeInTheDocument();
+    });
   });
 
   it('should render spinner when loading', () => {

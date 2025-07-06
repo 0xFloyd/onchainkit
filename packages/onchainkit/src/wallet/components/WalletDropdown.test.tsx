@@ -6,6 +6,10 @@ import { useDisconnect, useAccount } from 'wagmi';
 import { WalletDropdown } from './WalletDropdown';
 import { useWalletContext } from './WalletProvider';
 import { useName } from '@/identity';
+import { WalletLocaleProvider } from '../WalletLocale';
+import { WalletDropdownDisconnect } from './WalletDropdownDisconnect';
+import { WalletDropdownFundLink } from './WalletDropdownFundLink';
+import { WalletDropdownBasename } from './WalletDropdownBasename';
 
 vi.mock('./WalletProvider', () => ({
   useWalletContext: vi.fn(),
@@ -23,13 +27,13 @@ vi.mock('@/identity/components/Identity', () => ({
 vi.mock('wagmi', () => ({
   useDisconnect: vi.fn(),
   useAccount: vi.fn(),
+  useName: () => ({
+    data: null,
+    isLoading: false,
+  }),
   WagmiProvider: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   ),
-}));
-
-vi.mock('@/identity/hooks/useName', () => ({
-  useName: vi.fn(),
 }));
 
 vi.mock('./WalletDropdownContent', () => ({
@@ -157,5 +161,58 @@ describe('WalletDropdown', () => {
     });
     rerender(<WalletDropdown>Content</WalletDropdown>);
     expect(dropdown).toHaveClass('absolute top-full right-0');
+  });
+});
+
+describe('Wallet Dropdown Components Text Customization', () => {
+  describe('WalletDropdownDisconnect', () => {
+    it('renders with default English text', () => {
+      render(<WalletDropdownDisconnect />);
+      expect(screen.getByText('Disconnect')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from prop', () => {
+      render(<WalletDropdownDisconnect text="Log Out" />);
+      expect(screen.getByText('Log Out')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from provider', () => {
+      render(
+        <WalletLocaleProvider
+          texts={{ walletDropdownDisconnect: 'Provider Disconnect' }}
+        >
+          <WalletDropdownDisconnect />
+        </WalletLocaleProvider>,
+      );
+      expect(screen.getByText('Provider Disconnect')).toBeInTheDocument();
+    });
+  });
+
+  describe('WalletDropdownFundLink', () => {
+    it('renders with default English text', () => {
+      render(<WalletDropdownFundLink />);
+      expect(screen.getByText('Fund wallet')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from prop', () => {
+      render(<WalletDropdownFundLink text="Add Funds" />);
+      expect(screen.getByText('Add Funds')).toBeInTheDocument();
+    });
+  });
+
+  describe('WalletDropdownBasename', () => {
+    it('renders with default English text', () => {
+      render(<WalletDropdownBasename />);
+      expect(screen.getByText('Claim Basename')).toBeInTheDocument();
+      expect(screen.getByText('NEW')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from props', () => {
+      render(
+        <WalletDropdownBasename claimText="Get Name" newBadgeText="HOT" />,
+      );
+      expect(screen.getByText('Get Name')).toBeInTheDocument();
+      expect(screen.getByText('HOT')).toBeInTheDocument();
+    });
   });
 });

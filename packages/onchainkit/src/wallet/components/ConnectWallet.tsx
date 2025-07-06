@@ -18,6 +18,8 @@ import {
 } from './WalletProvider';
 import { WithRenderProps } from '@/internal/types';
 import { MiniKitContext } from '@/minikit/MiniKitProvider';
+import { WalletLocaleContext } from '../WalletLocale';
+import { useWalletText } from '../hooks/useWalletText';
 
 export type ConnectWalletProps = WithRenderProps<{
   /** Children can be utilized to display customized content when the wallet is connected. */
@@ -53,11 +55,12 @@ function ConnectWalletContent({
   ),
   className,
   onConnect,
-  disconnectedLabel = 'Connect Wallet',
+  disconnectedLabel,
   render,
 }: ConnectWalletProps) {
   const { config = { wallet: { display: undefined } } } = useOnchainKit();
   const walletContext = useWalletContext();
+  const locale = useContext(WalletLocaleContext);
   const {
     isConnectModalOpen,
     setIsConnectModalOpen,
@@ -80,6 +83,8 @@ function ConnectWalletContent({
 
   const connector = accountConnector || connectors[0];
   const isLoading = connectStatus === 'pending' || status === 'connecting';
+
+  const label = useWalletText('connectWalletButton', disconnectedLabel);
 
   const handleToggle = useCallback(() => {
     if (isSubComponentOpen) {
@@ -178,7 +183,7 @@ function ConnectWalletContent({
   if (render) {
     return (
       <ConnectWalletRenderHandler
-        label={disconnectedLabel}
+        label={label}
         onClick={handleConnectClick}
         isLoading={isLoading}
         render={render}
@@ -203,7 +208,7 @@ function ConnectWalletContent({
           )}
           onClick={handleConnectClick}
         >
-          {disconnectedLabel}
+          {label}
         </button>
         {isWalletModalEnabled && (
           <WalletModal

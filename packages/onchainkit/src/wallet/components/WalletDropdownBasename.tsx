@@ -6,16 +6,29 @@ import { basenameSvg } from '@/internal/svg/basenameSvg';
 import { base } from 'viem/chains';
 import { useAccount } from 'wagmi';
 import { cn, pressable, text } from '../../styles/theme';
+import { useContext } from 'react';
+import { WalletLocaleContext } from '../WalletLocale';
+import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownBasenameProps = {
   /** Optional className override for the element */
   className?: string;
+  profileText?: string;
+  claimText?: string;
+  newBadgeText?: string;
 };
 
 export function WalletDropdownBasename({
   className,
+  profileText,
+  claimText,
+  newBadgeText,
 }: WalletDropdownBasenameProps) {
   const { address } = useAccount();
+  const locale = useContext(WalletLocaleContext);
+  const profileLabel = useWalletText('walletDropdownProfile', profileText);
+  const claimLabel = useWalletText('walletDropdownClaim', claimText);
+  const newLabel = useWalletText('walletDropdownNew', newBadgeText);
 
   if (!address) {
     return null;
@@ -28,7 +41,7 @@ export function WalletDropdownBasename({
   });
 
   const hasBaseUserName = !!basename;
-  const title = hasBaseUserName ? 'Profile' : 'Claim Basename';
+  const title = hasBaseUserName ? profileLabel : claimLabel;
   const href = hasBaseUserName
     ? `https://www.base.org/name/${basename}`
     : 'https://www.base.org/names';
@@ -60,7 +73,7 @@ export function WalletDropdownBasename({
                   'ml-2 rounded-full bg-[#E0E7FF] px-2 py-0.5 text-center font-bold font-sans text-[#4F46E5] text-[0.6875rem] uppercase leading-none',
                 )}
               >
-                NEW
+                {newLabel}
               </span>
             )}
           </>

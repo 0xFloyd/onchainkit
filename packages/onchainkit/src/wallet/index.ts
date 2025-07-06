@@ -27,6 +27,7 @@ export { usePortfolio } from './hooks/usePortfolio';
 export { useGetTokenBalance } from './hooks/useGetTokenBalance';
 export { useGetETHBalance } from './hooks/useGetETHBalance';
 export { useIsWalletACoinbaseSmartWallet } from './hooks/useIsWalletACoinbaseSmartWallet';
+export { useWalletText } from './hooks/useWalletText';
 
 // Types
 export type {
@@ -42,3 +43,10 @@ export type {
   WalletDropdownProps,
   WalletProps,
 } from './types';
+
+export {
+  WalletLocaleContext,
+  WalletLocaleProvider,
+  defaultWalletTexts,
+} from './WalletLocale';
+export type { WalletTextOverrides } from './WalletLocale';

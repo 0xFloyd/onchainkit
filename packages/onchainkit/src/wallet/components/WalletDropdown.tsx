@@ -13,6 +13,9 @@ import { useWalletContext } from './WalletProvider';
 import { useAccount } from 'wagmi';
 import { LayerConfigProvider } from '@/internal/components/LayerConfigProvider';
 import { Token } from '@/token';
+import { useContext } from 'react';
+import { WalletLocaleContext } from '../WalletLocale';
+import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownProps = {
   children?: React.ReactNode;
@@ -26,7 +29,7 @@ export type WalletDropdownProps = {
   swappableTokens?: Token[];
 };
 
-const defaultWalletDropdownChildren = (
+const renderDefaultWalletDropdownChildren = (walletText: string) => (
   <>
     <Identity className="px-4 pt-3 pb-2" key="wallet-dd-identity">
       <Avatar />
@@ -40,7 +43,7 @@ const defaultWalletDropdownChildren = (
       href="https://keys.coinbase.com"
       target="_blank"
     >
-      Wallet
+      {walletText}
     </WalletDropdownLink>
     <WalletDropdownDisconnect key="wallet-dd-disconnect" />
   </>
@@ -52,6 +55,8 @@ export function WalletDropdown({
   classNames,
   swappableTokens,
 }: WalletDropdownProps) {
+  const walletDropdownText = useWalletText('walletDropdownWallet');
+  const locale = useContext(WalletLocaleContext);
   const {
     breakpoint,
     isSubComponentOpen,
@@ -79,7 +84,7 @@ export function WalletDropdown({
           classNames={classNames}
           swappableTokens={swappableTokens}
         >
-          {children || defaultWalletDropdownChildren}
+          {children || renderDefaultWalletDropdownChildren(walletDropdownText)}
         </WalletDropdownContent>
       </LayerConfigProvider>
     </div>

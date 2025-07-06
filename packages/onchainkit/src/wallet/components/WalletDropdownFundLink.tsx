@@ -1,11 +1,13 @@
 'use client';
 
-import { ReactNode, useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useContext, useMemo } from 'react';
 import { useGetFundingUrl } from '../../fund/hooks/useGetFundingUrl';
 import { getFundingPopupSize } from '../../fund/utils/getFundingPopupSize';
 import { useIcon } from '../../internal/hooks/useIcon';
 import { openPopup } from '../../internal/utils/openPopup';
 import { cn, pressable, text as themeText } from '../../styles/theme';
+import { WalletLocaleContext } from '../WalletLocale';
+import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownFundLinkProps = {
   /** Optional className override for the element */
@@ -38,8 +40,10 @@ export function WalletDropdownFundLink({
   popupSize = 'md',
   rel,
   target,
-  text = 'Fund wallet',
+  text,
 }: WalletDropdownFundLinkProps) {
+  const locale = useContext(WalletLocaleContext);
+  const label = useWalletText('walletDropdownFund', text);
   // If we can't get a funding URL, this component will be a no-op and render a disabled link
   const fundingUrlToRender =
     fundingUrl ??
@@ -85,10 +89,10 @@ export function WalletDropdownFundLink({
         <div className="-translate-y-1/2 absolute top-1/2 left-4 flex h-[1.125rem] w-[1.125rem] items-center justify-center">
           {iconSvg}
         </div>
-        <span className={cn(themeText.body, 'pl-6')}>{text}</span>
+        <span className={cn(themeText.body, 'pl-6')}>{label}</span>
       </span>
     ),
-    [fundingUrlToRender, iconSvg, text],
+    [fundingUrlToRender, iconSvg, label],
   );
 
   if (openIn === 'tab') {

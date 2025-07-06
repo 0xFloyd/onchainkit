@@ -14,6 +14,7 @@ import { useConnect, useConnectors } from 'wagmi';
 import type { MetaMaskParameters } from 'wagmi/connectors';
 import { WalletModal } from './WalletModal';
 import { checkWalletAndRedirect } from '../utils/checkWalletAndRedirect';
+import { WalletLocaleProvider } from '../WalletLocale';
 
 vi.mock('wagmi', () => ({
   useConnect: vi.fn(),
@@ -122,6 +123,78 @@ describe('WalletModal', () => {
 
     const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveAttribute('aria-label', 'Connect Wallet');
+  });
+
+  describe('Text Customization', () => {
+    it('renders with default English text', () => {
+      render(<WalletModal isOpen={true} onClose={mockOnClose} />);
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'aria-label',
+        'Connect Wallet',
+      );
+      expect(screen.getByText('Sign up')).toBeInTheDocument();
+      expect(screen.getByText(/By connecting a wallet/)).toBeInTheDocument();
+    });
+
+    it('renders with custom text from props', () => {
+      render(
+        <WalletModal
+          isOpen={true}
+          onClose={mockOnClose}
+          titleText="Custom Title"
+          signUpText="Register"
+          termsText="Custom Terms"
+        />,
+      );
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'aria-label',
+        'Custom Title',
+      );
+      expect(screen.getByText('Register')).toBeInTheDocument();
+      expect(screen.getByText('Custom Terms')).toBeInTheDocument();
+    });
+
+    it('renders with custom text from WalletLocaleProvider', () => {
+      const customTexts = {
+        walletModalTitle: 'Provider Title',
+        walletModalSignUp: 'Provider Sign Up',
+        walletModalAgreement: 'Provider agreement',
+      };
+      render(
+        <WalletLocaleProvider texts={customTexts}>
+          <WalletModal isOpen={true} onClose={mockOnClose} />
+        </WalletLocaleProvider>,
+      );
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'aria-label',
+        'Provider Title',
+      );
+      expect(screen.getByText('Provider Sign Up')).toBeInTheDocument();
+      expect(screen.getByText(/Provider agreement/)).toBeInTheDocument();
+    });
+
+    it('prioritizes prop text over provider text', () => {
+      const customTexts = {
+        walletModalTitle: 'Provider Title',
+        walletModalSignUp: 'Provider Sign Up',
+      };
+      render(
+        <WalletLocaleProvider texts={customTexts}>
+          <WalletModal
+            isOpen={true}
+            onClose={mockOnClose}
+            titleText="Prop Title"
+          />
+        </WalletLocaleProvider>,
+      );
+      // Prop text should be used for title
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'aria-label',
+        'Prop Title',
+      );
+      // Provider text should be used for sign up
+      expect(screen.getByText('Provider Sign Up')).toBeInTheDocument();
+    });
   });
 
   it('handles focus management through Dialog component', () => {
