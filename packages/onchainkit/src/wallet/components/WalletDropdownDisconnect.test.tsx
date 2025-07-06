@@ -31,7 +31,7 @@ describe('WalletDropdownDisconnect', () => {
   });
 
   it('renders correctly with custom text', () => {
-    render(<WalletDropdownDisconnect text="Log Out" />);
+    render(<WalletDropdownDisconnect disconnectText="Log Out" />);
     expect(screen.getByText('Log Out')).toBeInTheDocument();
   });
 

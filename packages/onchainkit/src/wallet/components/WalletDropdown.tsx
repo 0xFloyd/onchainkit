@@ -13,8 +13,6 @@ import { useWalletContext } from './WalletProvider';
 import { useAccount } from 'wagmi';
 import { LayerConfigProvider } from '@/internal/components/LayerConfigProvider';
 import { Token } from '@/token';
-import { useContext } from 'react';
-import { WalletLocaleContext } from '../WalletLocale';
 import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownProps = {

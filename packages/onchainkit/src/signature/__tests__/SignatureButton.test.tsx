@@ -59,7 +59,7 @@ describe('SignatureButton', () => {
       status: 'disconnected',
     });
 
-    render(<SignatureButton disconnectedLabel="Disconnected Label" />);
+    render(<SignatureButton disconnectedText="Disconnected Label" />);
     expect(screen.getByText('Disconnected Label')).toBeInTheDocument();
   });
 

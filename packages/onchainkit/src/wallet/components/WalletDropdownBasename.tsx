@@ -6,8 +6,6 @@ import { basenameSvg } from '@/internal/svg/basenameSvg';
 import { base } from 'viem/chains';
 import { useAccount } from 'wagmi';
 import { cn, pressable, text } from '../../styles/theme';
-import { useContext } from 'react';
-import { WalletLocaleContext } from '../WalletLocale';
 import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownBasenameProps = {
@@ -25,7 +23,6 @@ export function WalletDropdownBasename({
   newBadgeText,
 }: WalletDropdownBasenameProps) {
   const { address } = useAccount();
-  const locale = useContext(WalletLocaleContext);
   const profileLabel = useWalletText('walletDropdownProfile', profileText);
   const claimLabel = useWalletText('walletDropdownClaim', claimText);
   const newLabel = useWalletText('walletDropdownNew', newBadgeText);

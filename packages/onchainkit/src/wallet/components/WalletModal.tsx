@@ -11,7 +11,7 @@ import { rabbySvg } from '@/internal/svg/rabbySvg';
 import { trustWalletSvg } from '@/internal/svg/trustWalletSvg';
 import { border, cn, pressable, text } from '@/styles/theme';
 import { useOnchainKit } from '@/useOnchainKit';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useConnect } from 'wagmi';
 import { coinbaseWallet, injected, metaMask } from 'wagmi/connectors';
 import { WalletLocaleContext } from '../WalletLocale';
@@ -56,7 +56,6 @@ export function WalletModal({
 }: WalletModalProps) {
   const { connect } = useConnect();
   const { config } = useOnchainKit();
-  const locale = useContext(WalletLocaleContext);
 
   const modalTitle = useWalletText('walletModalTitle', titleText);
   const modalCloseAriaLabel = useWalletText(
@@ -282,126 +281,151 @@ export function WalletModal({
         )}
       >
         <button
+          type="button"
           onClick={onClose}
-          className={cn(pressable.default, 'absolute right-4 top-4')}
+          className={cn(
+            pressable.default,
+            'rounded-ock-default',
+            'border-ock-background',
+            'absolute top-4 right-4',
+            'flex items-center justify-center p-1',
+            'transition-colors duration-200',
+          )}
           aria-label={modalCloseAriaLabel}
         >
           <div className={cn('flex h-4 w-4 items-center justify-center')}>
             <CloseSvg />
           </div>
         </button>
-        <div className={cn('flex flex-col items-center justify-center gap-1')}>
-          {appName && (
-            <span className={cn(text.label1, 'text-ock-foreground-muted')}>
-              {appName}
-            </span>
-          )}
-          <h2 className={cn(text.headline, 'text-ock-foreground')}>
-            {modalTitle}
-          </h2>
-        </div>
-        <div
-          className={cn(
-            'flex flex-col items-center justify-center gap-2',
-            'w-full',
-          )}
-        >
+
+        {(appLogo || appName) && (
+          <div className="flex w-full flex-col items-center gap-2 py-3">
+            {appLogo && (
+              <div
+                className={cn(
+                  'rounded-ock-default',
+                  'h-14 w-14 overflow-hidden',
+                )}
+              >
+                <img
+                  src={appLogo}
+                  alt={`${appName || 'App'} icon`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+            {appName && (
+              <h2
+                className={cn(
+                  text.headline,
+                  'text-ock-foreground',
+                  'text-center',
+                )}
+              >
+                {appName}
+              </h2>
+            )}
+          </div>
+        )}
+
+        <div className="flex w-full flex-col gap-3">
           {isSignUpEnabled && (
             <button
+              type="button"
+              onClick={handleCoinbaseWalletConnection}
               className={cn(
-                pressable.default,
-                border.lineDefault,
-                'bg-ock-background-primary',
-                'rounded-ock-lg',
-                'flex w-full items-center justify-center gap-2 px-4 py-3',
+                'rounded-ock-default',
+                text.body,
+                pressable.alternate,
+                'text-ock-foreground',
+                'flex items-center justify-between px-4 py-3 text-left',
               )}
             >
-              <span className={cn(text.headline, 'text-ock-foreground')}>
-                {modalSignUp}
-              </span>
+              {modalSignUp}
               <div className="h-4 w-4">{defaultAvatarSVG}</div>
             </button>
           )}
-          <span
-            className={cn(
-              text.label1,
-              'text-ock-foreground-muted',
-              'flex items-center gap-2',
-              'w-full',
-              'before:bg-ock-border-default before:h-px before:w-full before:flex-grow',
-              'after:bg-ock-border-default after:h-px after:w-full after:flex-grow',
+
+          <div className="relative">
+            {isSignUpEnabled && (
+              <div className="absolute inset-0 flex items-center">
+                <div
+                  className={cn(border.lineDefault, 'w-full border-[0.5px]')}
+                />
+              </div>
             )}
-          >
-            {isSignUpEnabled ? modalContinue : modalConnectOnly}
-          </span>
+            <div className="relative flex justify-center">
+              <span
+                className={cn(
+                  'bg-ock-background',
+                  'text-ock-foreground-muted',
+                  text.legal,
+                  'px-2',
+                )}
+              >
+                {isSignUpEnabled ? modalContinue : modalConnectOnly}
+              </span>
+            </div>
+          </div>
+          {availableWallets.map((wallet) => (
+            <button
+              key={wallet.id}
+              type="button"
+              onClick={wallet.connector}
+              className={cn(
+                'rounded-ock-default',
+                'bg-ock-background',
+                text.body,
+                pressable.alternate,
+                'text-ock-foreground',
+                'flex items-center justify-between px-4 py-3 text-left',
+              )}
+            >
+              {wallet.name}
+              <div className="-mr-0.5 flex h-4 w-4 items-center justify-center">
+                {wallet.icon}
+              </div>
+            </button>
+          ))}
         </div>
 
         <div
           className={cn(
-            'flex w-full flex-col items-center justify-center gap-2',
+            'text-ock-foreground-muted',
+            text.legal,
+            'flex flex-col items-center justify-center gap-1 px-4',
+            'mt-4 text-center',
           )}
         >
-          {availableWallets.map((wallet) => (
-            <button
-              key={wallet.id}
-              onClick={wallet.connector}
-              className={cn(
-                pressable.default,
-                border.lineDefault,
-                'bg-ock-background-primary',
-                'rounded-ock-lg',
-                'flex w-full items-center justify-start gap-4 px-4 py-3',
-              )}
-            >
-              <div className={cn('h-8 w-8')}>{wallet.icon}</div>
-              <span className={cn(text.headline, 'text-ock-foreground')}>
-                {wallet.name}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className={cn('w-full')}>
-          <p
-            className={cn(text.label1, 'text-center text-ock-foreground-muted')}
-          >
-            <span className="font-normal text-[10px] leading-[13px]">
-              What is a wallet?
-            </span>
-          </p>
-        </div>
-        <div className={cn('w-full')}>
-          <p
-            className={cn(text.label1, 'text-center text-ock-foreground-muted')}
-          >
-            <span className="font-normal text-[10px] leading-[13px]">
-              {isSignUpEnabled ? modalAgreement : ''}{' '}
-              {termsOfServiceUrl && (
-                <a
-                  href={termsOfServiceUrl}
-                  className={cn(text.accent, pressable.secondary)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {modalTerms}
-                </a>
-              )}
-              {privacyPolicyUrl && termsOfServiceUrl && (
-                <span className="text-ock-foreground-muted">{modalAnd}</span>
-              )}
-              {privacyPolicyUrl && (
-                <a
-                  href={privacyPolicyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn('text-ock-primary', 'hover:underline')}
-                  tabIndex={0}
-                >
-                  {modalPrivacy}
-                </a>
-              )}
-              .
-            </span>
-          </p>
+          <span className="font-normal text-[10px] leading-[13px]">
+            {modalAgreement}
+          </span>
+          <span className="font-normal text-[10px] leading-[13px]">
+            {termsOfServiceUrl && (
+              <a
+                href={termsOfServiceUrl}
+                className={cn('text-ock-primary', 'hover:underline')}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={0}
+              >
+                {modalTerms}
+              </a>
+            )}{' '}
+            {termsOfServiceUrl && privacyPolicyUrl && modalAnd}{' '}
+            {privacyPolicyUrl && (
+              <a
+                href={privacyPolicyUrl}
+                className={cn('text-ock-primary', 'hover:underline')}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={0}
+              >
+                {modalPrivacy}
+              </a>
+            )}
+            .
+          </span>
         </div>
       </div>
     </Dialog>

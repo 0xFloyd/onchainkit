@@ -70,7 +70,7 @@ export function BuyButton() {
 
   if (!isDisabled && !address) {
     return (
-      <ConnectWallet disconnectedLabel="Buy" className="h-12 w-24 min-w-24" />
+      <ConnectWallet disconnectedText="Buy" className="h-12 w-24 min-w-24" />
     );
   }
 

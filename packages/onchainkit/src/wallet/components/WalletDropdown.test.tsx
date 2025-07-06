@@ -172,7 +172,7 @@ describe('Wallet Dropdown Components Text Customization', () => {
     });
 
     it('renders with custom text from prop', () => {
-      render(<WalletDropdownDisconnect text="Log Out" />);
+      render(<WalletDropdownDisconnect disconnectText="Log Out" />);
       expect(screen.getByText('Log Out')).toBeInTheDocument();
     });
 
@@ -195,7 +195,7 @@ describe('Wallet Dropdown Components Text Customization', () => {
     });
 
     it('renders with custom text from prop', () => {
-      render(<WalletDropdownFundLink text="Add Funds" />);
+      render(<WalletDropdownFundLink fundWalletText="Add Funds" />);
       expect(screen.getByText('Add Funds')).toBeInTheDocument();
     });
   });

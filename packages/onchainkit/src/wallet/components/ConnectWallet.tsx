@@ -18,7 +18,6 @@ import {
 } from './WalletProvider';
 import { WithRenderProps } from '@/internal/types';
 import { MiniKitContext } from '@/minikit/MiniKitProvider';
-import { WalletLocaleContext } from '../WalletLocale';
 import { useWalletText } from '../hooks/useWalletText';
 
 export type ConnectWalletProps = WithRenderProps<{
@@ -83,7 +82,7 @@ function ConnectWalletContent({
   const connector = accountConnector || connectors[0];
   const isLoading = connectStatus === 'pending' || status === 'connecting';
 
-  const label = useWalletText('connectWalletButton', disconnectedText);
+  const label = disconnectedText ?? useWalletText('connectWalletButton');
 
   const handleToggle = useCallback(() => {
     if (isSubComponentOpen) {

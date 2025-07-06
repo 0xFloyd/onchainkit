@@ -22,7 +22,7 @@ type SignatureButtonProps = WithRenderProps<{
   /** Text displayed while waiting for signature */
   pendingLabel?: ReactNode;
   /** Text displayed when wallet is disconnected */
-  disconnectedLabel?: ReactNode;
+  disconnectedText?: ReactNode;
   /** Custom render function for complete control of button rendering */
   render?: ({
     label,
@@ -42,7 +42,7 @@ export function SignatureButton({
   errorLabel = 'Try again',
   successLabel = 'Signed',
   pendingLabel = 'Signing...',
-  disconnectedLabel,
+  disconnectedText,
   render,
 }: SignatureButtonProps) {
   const { address } = useAccount();
@@ -61,7 +61,7 @@ export function SignatureButton({
     return label;
   }, [statusName, label, errorLabel, successLabel, pendingLabel]);
 
-  if (!address) return <ConnectWallet disconnectedLabel={disconnectedLabel} />;
+  if (!address) return <ConnectWallet disconnectedText={disconnectedText} />;
 
   if (render) {
     return render({

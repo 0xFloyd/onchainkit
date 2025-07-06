@@ -1,12 +1,11 @@
 'use client';
 
-import { ReactNode, useCallback, useContext, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { useGetFundingUrl } from '../../fund/hooks/useGetFundingUrl';
 import { getFundingPopupSize } from '../../fund/utils/getFundingPopupSize';
 import { useIcon } from '../../internal/hooks/useIcon';
 import { openPopup } from '../../internal/utils/openPopup';
 import { cn, pressable, text as themeText } from '../../styles/theme';
-import { WalletLocaleContext } from '../WalletLocale';
 import { useWalletText } from '../hooks/useWalletText';
 
 export type WalletDropdownFundLinkProps = {
